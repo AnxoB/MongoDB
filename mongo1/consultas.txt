@@ -1,0 +1,89 @@
+1. db.mediciones.insertMany([
+    {
+        sensorId:1,
+        ts: new Date(),
+        tipo : "temp",
+        valor: 34,
+        ubicación: "salón"
+    },
+    {
+        sensorId:2,
+        ts: new Date(),
+        tipo : "hum",
+        valor: 50,
+        ubicación: "habitación"
+    },
+    {
+        sensorId:3,
+        ts: new Date(),
+        tipo : "hum",
+        valor: 20,
+        ubicación: "baño"
+    }
+])
+
+2. db.mediciones.find({ ts: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) }}, {sensorId:1})
+
+3. db.mediciones.find({ valor: {$gte:40} })
+
+4. db.mediciones.updateMany({ valor: {$gte:40}}, {$set: {valor:40}})
+
+5. db.mediciones.deleteMany({ ts : {$lte: new Date(Date.now() - 24 * 60 * 60 * 1000)}})
+
+
+1. db.cliente.insertMany([ { idCliente:1, nombre:"Andres", emails:["andres@gmail.com", "andres2@gmail.com"], direccion:["Santiago Compostela"]}, { idCliente:2, nombre:"Anxo", emails:["anxo@gmail.com", "anxo2@gmail.com"], direccion:["Santiago Compostela", "As Cerdeiras"]} ])
+db.pedido.insertMany([ { idPedido:2, idCliente:2, fecha:new Date("2026-02-02"), lineas:[{sku:"P2", nombre:"Pedido2", cantidad:2, precio:40}], estado:"nuevo" }, { idPedido:3, idCliente:2, fecha:new Date("2026-01-01"), lineas:[{sku:"P3", nombre:"Pedido3", cantidad:1, precio:10}], estado:"malo" } ])
+db.pedido.insertOne({
+  idPedido: 1,
+  idCliente: 1,
+  fecha: new Date("2026-01-01"),
+  lineas: [
+    {
+      sku: "P1",
+      nombre: "Pedido1",
+      cantidad: 1,
+      precio: 30
+    }
+  ],
+  estado: "nuevo"
+})
+
+2. db.pedido.find({idCliente:2}, {_id:0})
+
+3. db.pedido.find({"lineas.cantidad":{$gt:100}}, {_id:0})
+
+//Ver las líneas que cumplen cantidad>100
+db.pedidos.aggregate([
+  { $unwind: $lineas },
+  { $match: { "lineas.cantidad": { $gt:100 } } },
+  { $project: {
+    _id: 0,
+    idPedido: 1,
+    idCliente: 1,
+    fecha: 1,
+    estado: 1,
+    linea: "$lineas" } }
+])
+
+//Ver los pedidos cuya suma de las cantidades de las líneas cumplen >100
+db.pedidos.aggregate([
+  {
+    $project: {
+      _id: 0,
+      idPedido: 1,
+      idCliente: 1,
+      fecha: 1,
+      estado: 1,
+      cantidadTotal: { $sum: "$lineas.cantidad"}
+    }
+  },
+  {
+    $match: {
+      cantidadTotal: { $gt: 100}
+    }
+  }
+])
+
+4. db.pedido.updateOne({idPedido: 1}, {$set: {estado:"aceptable"}})
+
+5. db.cliente.updateOne({idCliente: 1}, {$set: {"emails.0" : "nuevoemail@gmail.com"}})
