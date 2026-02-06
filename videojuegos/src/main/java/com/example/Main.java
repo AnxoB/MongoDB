@@ -9,6 +9,8 @@ public class Main {
     public static void main(String[] args) {
         MatchController matchController = new MatchController();
 
+        /* 
+
         List<Document> partidas = new ArrayList<>();
 
         partidas.add(new Document()
@@ -40,11 +42,22 @@ public class Main {
                 .append("nivel", 4));
 
         partidas.add(new Document()
-                .append("xogador", "Yeray")
+                .append("xogador", "Anxo")
                 .append("xogo", "Space Invaders")
-                .append("puntuacion", 900)
-                .append("duracion", 10)
-                .append("nivel", 2));
-          
+                .append("puntuacion", 1300)
+                .append("duracion", 20)
+                .append("nivel", 4));
+
+        matchController.insertarMultiplesPartidas(partidas);
+
+        */
+
+        matchController.obtenerTotalPuntuacion();
+        matchController.mejorPartida();
+        matchController.partidaMasCorta();
+        matchController.rankingJugadores();
+        matchController.listaPartidas();
+        matchController.obtenerPuntuacionMedia();
+        matchController.partidas();
     }
 }

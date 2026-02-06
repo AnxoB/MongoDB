@@ -73,7 +73,7 @@ public final class MongoProvider implements AutoCloseable {
      *
      * @return coleccion MongoDB que almacena documentos de las partidas
      */
-    public MongoCollection<Document> videojuegos() {
+    public MongoCollection<Document> partidas() {
         return collection;
     }
 
